@@ -796,3 +796,52 @@ body {
     border-top: 1px solid rgba(255,255,255,0.1);
     margin-top: 8px;
 }
+
+/* TV Section — always visible */
+.tv-section {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+.tv-section-inner {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 32px;
+}
+.tv-section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+}
+.tv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+.tv-card {
+    background: rgba(76, 175, 80, 0.08);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    cursor: pointer;
+}
+.tv-card:hover {
+    transform: translateY(-2px);
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.15);
+}
+.tv-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.tv-info {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+}

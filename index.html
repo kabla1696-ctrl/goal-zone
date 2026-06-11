@@ -23,21 +23,17 @@
                 <span class="live-dot"></span>
                 <span id="liveCount">0 LIVE</span>
             </div>
-            <div class="auto-refresh">
-                ⏱ <span id="refreshTimer">30</span>s
-            </div>
+            <div class="auto-refresh">⏱ <span id="refreshTimer">30</span>s</div>
         </div>
     </header>
 
     <nav class="nav-tabs">
-        <button class="tab active" data-tab="live" onclick="switchTab('live')">🔴 LIVE NOW</button>
+        <button class="tab active" data-tab="live" onclick="switchTab('live')">🔴 LIVE</button>
         <button class="tab" data-tab="schedule" onclick="switchTab('schedule')">📅 SCHEDULE</button>
-        <button class="tab" data-tab="standings" onclick="switchTab('standings')">🏆 STANDINGS</button>
+        <button class="tab" data-tab="standings" onclick="switchTab('standings')">🏆 TABLES</button>
         <button class="tab" data-tab="teams" onclick="switchTab('teams')">👥 TEAMS</button>
-        <button class="tab" data-tab="tv" onclick="switchTab('tv')">📺 TV CHANNELS</button>
     </nav>
 
-    <!-- AdSense -->
     <div class="ad-banner">
         <div class="ad-placeholder">
             <span class="ad-label">Advertisement</span>
@@ -46,18 +42,15 @@
     </div>
 
     <main class="main-content">
-        <!-- LIVE -->
         <section id="tab-live" class="tab-content active">
             <div class="section-header">
                 <h2>🔴 Live Matches</h2>
-                <span class="match-count" id="liveCountLabel"></span>
             </div>
             <div id="liveMatches" class="matches-grid">
                 <div class="loading"><div class="spinner"></div><p>Loading matches...</p></div>
             </div>
         </section>
 
-        <!-- SCHEDULE -->
         <section id="tab-schedule" class="tab-content">
             <div class="section-header">
                 <h2>📅 Match Schedule</h2>
@@ -70,13 +63,11 @@
             <div id="scheduleMatches" class="matches-grid"></div>
         </section>
 
-        <!-- STANDINGS -->
         <section id="tab-standings" class="tab-content">
             <div class="section-header"><h2>🏆 Group Standings</h2></div>
             <div id="standingsContent" class="standings-grid"></div>
         </section>
 
-        <!-- TEAMS -->
         <section id="tab-teams" class="tab-content">
             <div class="section-header">
                 <h2>👥 All Teams</h2>
@@ -86,14 +77,18 @@
             </div>
             <div id="teamsContent" class="teams-grid"></div>
         </section>
-
-        <!-- TV CHANNELS -->
-        <section id="tab-tv" class="tab-content">
-            <div id="tvChannels"></div>
-        </section>
     </main>
 
-    <!-- AdSense Bottom -->
+    <!-- TV Channels — always visible, not a tab -->
+    <section class="tv-section">
+        <div class="tv-section-inner">
+            <h2>📺 Where to Watch — Bangladesh</h2>
+            <div class="tv-grid" id="tvBangladesh"></div>
+            <h2 style="margin-top:24px">🌍 Global Broadcasters</h2>
+            <div class="tv-grid" id="tvGlobal"></div>
+        </div>
+    </section>
+
     <div class="ad-banner">
         <div class="ad-placeholder">
             <span class="ad-label">Advertisement</span>
@@ -101,7 +96,6 @@
         </div>
     </div>
 
-    <!-- Affiliate -->
     <section class="affiliate-section">
         <h3>🛍️ Football Gear</h3>
         <div class="affiliate-grid">
@@ -130,21 +124,12 @@
 
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-brand">
-                <span class="footer-logo">⚽</span>
-                <span>GOAL ZONE</span>
-            </div>
-            <div class="footer-links">
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-                <a href="#">Privacy</a>
-            </div>
-            <div class="footer-copy">
-                © 2026 Goal Zone — Not affiliated with FIFA.
-            </div>
+            <div class="footer-brand"><span class="footer-logo">⚽</span><span>GOAL ZONE</span></div>
+            <div class="footer-links"><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a></div>
+            <div class="footer-copy">© 2026 Goal Zone — Not affiliated with FIFA.</div>
         </div>
     </footer>
 
-    <script src="app.js?v=3"></script>
+    <script src="app.js"></script>
 </body>
 </html>

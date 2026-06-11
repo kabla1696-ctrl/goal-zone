@@ -313,24 +313,21 @@ function searchTeams(query) {
     renderTeams(filtered);
 }
 
-// Render TV channels
+// Render TV channels — always visible, not a tab
 function renderTVChannels() {
-    const container = document.getElementById('tvChannels');
-    if (!container) return;
+    const bdContainer = document.getElementById('tvBangladesh');
+    const globalContainer = document.getElementById('tvGlobal');
 
-    let html = '<h3 style="color:#fff;margin-bottom:16px">📺 Where to Watch</h3>';
-    html += '<h4 style="color:#4CAF50;margin-bottom:8px">🇧🇩 Bangladesh</h4><div class="tv-list">';
-    TV_CHANNELS.bangladesh.forEach(ch => {
-        html += `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`;
-    });
-    html += '</div>';
-
-    html += '<h4 style="color:#FF9800;margin:16px 0 8px">🌍 Global Broadcasters</h4><div class="tv-list">';
-    TV_CHANNELS.global.forEach(ch => {
-        html += `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
+    if (bdContainer) {
+        bdContainer.innerHTML = TV_CHANNELS.bangladesh.map(ch =>
+            `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`
+        ).join('');
+    }
+    if (globalContainer) {
+        globalContainer.innerHTML = TV_CHANNELS.global.map(ch =>
+            `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`
+        ).join('');
+    }
 }
 
 function switchTab(tab) {
