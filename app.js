@@ -431,6 +431,7 @@ function initParticles() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    renderTVChannels();
     initParticles();
     fetchData();
     startRefreshTimer();
