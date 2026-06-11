@@ -352,7 +352,7 @@ async function fetchData() {
 
         if (teamsRes.status === 'fulfilled') {
             const teamsData = await teamsRes.value.json();
-            allTeams = Array.isArray(teamsData) ? teamsData : (teamsData.data || []);
+            allTeams = teamsData.teams || teamsData.data || (Array.isArray(teamsData) ? teamsData : []);
             allTeams.forEach(t => {
                 const name = t.name_en || t.name || '';
                 const code = t.fifa_code || '';
@@ -372,14 +372,14 @@ async function fetchData() {
 
         if (gamesRes.status === 'fulfilled') {
             const gamesData = await gamesRes.value.json();
-            allMatches = Array.isArray(gamesData) ? gamesData : (gamesData.data || []);
+            allMatches = gamesData.games || gamesData.data || (Array.isArray(gamesData) ? gamesData : []);
             renderLiveMatches(allMatches);
             renderSchedule(allMatches);
         }
 
         if (groupsRes.status === 'fulfilled') {
             const groupsData = await groupsRes.value.json();
-            allGroups = groupsData.data || groupsData;
+            allGroups = groupsData.groups || groupsData.data || groupsData;
             renderStandings(allGroups);
         }
 
