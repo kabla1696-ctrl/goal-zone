@@ -390,6 +390,7 @@ async function fetchData() {
         console.error('❌ Error fetching data:', error);
         document.getElementById('liveMatches').innerHTML = `
             <div class="no-matches"><div class="icon">⚠️</div><h3>Connection Error</h3><p>Could not load match data. Retrying...</p></div>`;
+        renderTVChannels();
     }
 }
 
