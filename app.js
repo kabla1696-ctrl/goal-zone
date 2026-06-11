@@ -7,67 +7,54 @@ const API_BASE = 'https://worldcup26.ir';
 let allMatches = [];
 let allTeams = [];
 let allGroups = {};
+let allStadiums = {};
 let refreshInterval = null;
 let refreshCountdown = 30;
 let currentFilter = 'all';
 
-// Country flag emojis
-const FLAG_MAP = {
-    'ARG': '🇦🇷', 'AUS': '🇦🇺', 'BEL': '🇧🇪', 'BRA': '🇧🇷', 'CAN': '🇨🇦',
-    'CMR': '🇨🇲', 'CHI': '🇨🇱', 'COL': '🇨🇴', 'CRI': '🇨🇷', 'CRO': '🇭🇷',
-    'DEN': '🇩🇰', 'ECU': '🇪🇨', 'ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'FRA': '🇫🇷', 'GER': '🇩🇪',
-    'GHA': '🇬🇭', 'GRE': '🇬🇷', 'HAI': '🇭🇹', 'HON': '🇭🇳', 'HUN': '🇭🇺',
-    'IRN': '🇮🇷', 'IRQ': '🇮🇶', 'ITA': '🇮🇹', 'JAM': '🇯🇲', 'JPN': '🇯🇵',
-    'KOR': '🇰🇷', 'KSA': '🇸🇦', 'MAR': '🇲🇦', 'MEX': '🇲🇽', 'NED': '🇳🇱',
-    'NGA': '🇳🇬', 'NIR': '🇬🇧', 'NOR': '🇳🇴', 'NZL': '🇳🇿', 'PAN': '🇵🇦',
-    'PAR': '🇵🇾', 'PER': '🇵🇪', 'POL': '🇵🇱', 'POR': '🇵🇹', 'QAT': '🇶🇦',
-    'ROI': '🇮🇪', 'RUS': '🇷🇺', 'SCO': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'SEN': '🇸🇳', 'SRB': '🇷🇸',
-    'SUI': '🇨🇭', 'ESP': '🇪🇸', 'SWE': '🇸🇪', 'TUN': '🇹🇳', 'TUR': '🇹🇷',
-    'UKR': '🇺🇦', 'URU': '🇺🇾', 'USA': '🇺🇸', 'UZB': '🇺🇿', 'WAL': '🏴󠁧󠁢󠁷󠁬󠁳󠁿',
-    'ZAI': '🇨🇩',
-    // Common full names
-    'Mexico': '🇲🇽', 'Brazil': '🇧🇷', 'Argentina': '🇦🇷', 'France': '🇫🇷',
-    'Germany': '🇩🇪', 'Spain': '🇪🇸', 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Italy': '🇮🇹',
-    'Portugal': '🇵🇹', 'Netherlands': '🇳🇱', 'Belgium': '🇧🇪', 'Croatia': '🇭🇷',
-    'Japan': '🇯🇵', 'South Korea': '🇰🇷', 'Australia': '🇦🇺', 'USA': '🇺🇸',
-    'Canada': '🇨🇦', 'Morocco': '🇲🇦', 'Senegal': '🇸🇳', 'Ghana': '🇬🇭',
-    'Cameroon': '🇨🇲', 'Serbia': '🇷🇸', 'Switzerland': '🇨🇭', 'Poland': '🇵🇱',
-    'Denmark': '🇩🇰', 'Tunisia': '🇹🇳', 'Saudi Arabia': '🇸🇦', 'Iran': '🇮🇷',
-    'Uruguay': '🇺🇾', 'Ecuador': '🇪🇨', 'Colombia': '🇨🇴', 'Peru': '🇵🇪',
-    'Chile': '🇨🇱', 'Paraguay': '🇵🇾', 'Costa Rica': '🇨🇷', 'Panama': '🇵🇦',
-    'Honduras': '🇭🇳', 'Jamaica': '🇯🇲', 'Haiti': '🇭🇹', 'Qatar': '🇶🇦',
-    'Iraq': '🇮🇶', 'Algeria': '🇩🇿', 'Egypt': '🇪🇬', 'Nigeria': '🇳🇬',
-    'Ivory Coast': '🇨🇮', 'Mali': '🇲🇱', 'Burkina Faso': '🇧🇫', 'South Africa': '🇿🇦',
-    'Ireland': '🇮🇪', 'Northern Ireland': '🇬🇧', 'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Wales': '🏴󠁧󠁢󠁷󠁬󠁳󠁿',
-    'Norway': '🇳🇴', 'Sweden': '🇸🇪', 'Greece': '🇬🇷', 'Hungary': '🇭🇺',
-    'Czech Republic': '🇨🇿', 'Ukraine': '🇺🇦', 'Turkey': '🇹🇷', 'Russia': '🇷🇺',
-    'China': '🇨🇳', 'India': '🇮🇳', 'Indonesia': '🇮🇩', 'Thailand': '🇹🇭',
-    'Vietnam': '🇻🇳', 'Philippines': '🇵🇭', 'Malaysia': '🇲🇾', 'Pakistan': '🇵🇰',
-    'Bangladesh': '🇧🇩', 'Nepal': '🇳🇵', 'Sri Lanka': '🇱🇰', 'Uzbekistan': '🇺🇿',
-    'Albania': '🇦🇱', 'Armenia': '🇦🇲', 'Azerbaijan': '🇦🇿', 'Belarus': '🇧🇾',
-    'Bosnia': '🇧🇦', 'Bulgaria': '🇧🇬', 'Cyprus': '🇨🇾', 'Estonia': '🇪🇪',
-    'Finland': '🇫🇮', 'Georgia': '🇬🇪', 'Iceland': '🇮🇸', 'Kazakhstan': '🇰🇿',
-    'Latvia': '🇱🇻', 'Lithuania': '🇱🇹', 'Moldova': '🇲🇩', 'Montenegro': '🇲🇪',
-    'North Macedonia': '🇲🇰', 'Romania': '🇷🇴', 'Slovakia': '🇸🇰', 'Slovenia': '🇸🇮',
+// Country flag emojis (fallback)
+const FLAG_EMOJI = {
+    'MEX': '🇲🇽', 'BRA': '🇧🇷', 'ARG': '🇦🇷', 'FRA': '🇫🇷', 'GER': '🇩🇪',
+    'ESP': '🇪🇸', 'ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'ITA': '🇮🇹', 'POR': '🇵🇹', 'NED': '🇳🇱',
+    'BEL': '🇧🇪', 'CRO': '🇭🇷', 'JPN': '🇯🇵', 'KOR': '🇰🇷', 'AUS': '🇦🇺',
+    'USA': '🇺🇸', 'CAN': '🇨🇦', 'MAR': '🇲🇦', 'SEN': '🇸🇳', 'GHA': '🇬🇭',
+    'CMR': '🇨🇲', 'SRB': '🇷🇸', 'SUI': '🇨🇭', 'POL': '🇵🇱', 'DEN': '🇩🇰',
+    'TUN': '🇹🇳', 'KSA': '🇸🇦', 'IRN': '🇮🇷', 'URU': '🇺🇾', 'ECU': '🇪🇨',
+    'COL': '🇨🇴', 'PER': '🇵🇪', 'CHI': '🇨🇱', 'PAR': '🇵🇾', 'CRC': '🇨🇷',
+    'PAN': '🇵🇦', 'HON': '🇭🇳', 'JAM': '🇯🇲', 'HAI': '🇭🇹', 'QAT': '🇶🇦',
+    'IRQ': '🇮🇶', 'RSA': '🇿🇦', 'NGA': '🇳🇬', 'CIV': '🇨🇮', 'MLI': '🇲🇱',
+    'BFA': '🇧🇫', 'NZL': '🇳🇿', 'UKR': '🇺🇦', 'SWE': '🇸🇪', 'NOR': '🇳🇴',
+    'NIR': '🇬🇧', 'SCO': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'WAL': '🏴󠁧󠁢󠁷󠁬󠁳󠁿', 'GRE': '🇬🇷', 'HUN': '🇭🇺',
+    'CZE': '🇨🇿', 'TUR': '🇹🇷', 'RUS': '🇷🇺', 'ROU': '🇷🇴', 'BUL': '🇧🇬',
+    'ALB': '🇦🇱', 'ISL': '🇮🇸', 'FIN': '🇫🇮', 'SVK': '🇸🇰', 'SVN': '🇸🇮',
+    'BIH': '🇧🇦', 'MNE': '🇲🇪', 'MKD': '🇲🇰', 'GEO': '🇬🇪', 'ARM': '🇦🇲',
+    'AZE': '🇦🇿', 'KAZ': '🇰🇿', 'UZB': '🇺🇿', 'CHN': '🇨🇳', 'IND': '🇮🇳',
 };
 
-// Get flag emoji from team code or name
+// Build team lookup from fifa_code
+let teamLookup = {};
+
 function getFlag(code, name) {
-    if (FLAG_MAP[code]) return FLAG_MAP[code];
-    if (FLAG_MAP[name]) return FLAG_MAP[name];
-    // Try partial match
-    for (const [key, flag] of Object.entries(FLAG_MAP)) {
-        if (name && name.includes(key)) return flag;
-        if (code && code.includes(key)) return flag;
-    }
+    if (code && FLAG_EMOJI[code]) return FLAG_EMOJI[code];
+    if (name && FLAG_EMOJI[name]) return FLAG_EMOJI[name];
+    // Try lookup
+    if (code && teamLookup[code]) return teamLookup[code];
     return '⚽';
+}
+
+// Get stadium name from ID
+function getStadium(id) {
+    return allStadiums[id] || '';
 }
 
 // Format match time
 function formatTime(dateStr) {
     if (!dateStr) return '';
     try {
-        const d = new Date(dateStr);
+        // Format: "06/11/2026 13:00"
+        const [datePart, timePart] = dateStr.split(' ');
+        const [month, day, year] = datePart.split('/');
+        const d = new Date(`${year}-${month}-${day}T${timePart}:00`);
         return d.toLocaleString('en-US', {
             month: 'short', day: 'numeric',
             hour: '2-digit', minute: '2-digit'
@@ -75,44 +62,52 @@ function formatTime(dateStr) {
     } catch { return dateStr; }
 }
 
-// Format group name
-function formatGroup(group) {
-    if (!group) return '';
-    return `Group ${group}`;
+// Get match status info
+function getStatusInfo(match) {
+    const finished = (match.finished || '').toUpperCase() === 'TRUE';
+    const timeElapsed = (match.time_elapsed || '').toLowerCase();
+
+    if (finished || timeElapsed === 'finished') {
+        return { isLive: false, isFinished: true, isUpcoming: false, text: 'FT', class: 'status-finished', minute: '' };
+    }
+
+    // Check for live match (time_elapsed contains minutes like "45", "90+2", etc.)
+    if (timeElapsed && timeElapsed !== 'notstarted' && timeElapsed !== 'halftime' && timeElapsed !== 'finished') {
+        const minute = timeElapsed === 'halftime' ? 'HT' : timeElapsed + "'";
+        return { isLive: true, isFinished: false, isUpcoming: false, text: `🔴 ${minute}`, class: 'status-live', minute };
+    }
+
+    if (timeElapsed === 'halftime') {
+        return { isLive: true, isFinished: false, isUpcoming: false, text: '🔴 HT', class: 'status-live', minute: 'HT' };
+    }
+
+    return {
+        isLive: false, isFinished: false, isUpcoming: true,
+        text: formatTime(match.local_date),
+        class: 'status-upcoming', minute: ''
+    };
 }
 
 // Create match card HTML
 function createMatchCard(match) {
-    const homeTeam = match.home_team || match.homeTeam || {};
-    const awayTeam = match.away_team || match.awayTeam || {};
-    const homeName = homeTeam.name || homeTeam.country || match.home || 'TBD';
-    const awayName = awayTeam.name || awayTeam.country || match.away || 'TBD';
-    const homeCode = homeTeam.code || homeTeam.team_code || '';
-    const awayCode = awayTeam.code || awayTeam.team_code || '';
-    const homeScore = match.home_score ?? match.homeScore ?? match.score?.home ?? '-';
-    const awayScore = match.away_score ?? match.awayScore ?? match.score?.away ?? '-';
-    const status = (match.status || '').toLowerCase();
-    const group = match.group || match.group_name || '';
-    const venue = match.venue || match.stadium || '';
-    const time = match.date || match.datetime || match.kickoff || '';
-    const matchTime = match.time || match.minute || '';
+    const homeName = match.home_team_name_en || 'TBD';
+    const awayName = match.away_team_name_en || 'TBD';
+    const homeCode = match.home_team_fifa_code || match.home_team_code || '';
+    const awayCode = match.away_team_fifa_code || match.away_team_code || '';
+    const homeScore = match.home_score || '0';
+    const awayScore = match.away_score || '0';
+    const group = match.group || '';
+    const stadium = getStadium(match.stadium_id);
+    const status = getStatusInfo(match);
 
-    const isLive = status === 'live' || status === 'in progress' || status === 'playing';
-    const isFinished = status === 'finished' || status === 'ft' || status === 'completed';
-    const isUpcoming = !isLive && !isFinished;
-
-    let statusClass = 'status-upcoming';
-    let statusText = formatTime(time);
-    if (isLive) { statusClass = 'status-live'; statusText = `🔴 LIVE ${matchTime ? matchTime + "'" : ''}`; }
-    if (isFinished) { statusClass = 'status-finished'; statusText = 'FT'; }
-
+    const isLive = status.isLive;
     const scoreClass = isLive ? 'live-score' : '';
 
     return `
         <div class="match-card ${isLive ? 'live' : ''}">
             <div class="match-meta">
-                <span class="match-group">${formatGroup(group)}</span>
-                <span class="match-status ${statusClass}">${statusText}</span>
+                <span class="match-group">Group ${group}</span>
+                <span class="match-status ${status.class}">${status.text}</span>
             </div>
             <div class="match-teams">
                 <div class="team">
@@ -129,7 +124,7 @@ function createMatchCard(match) {
                     ${awayCode ? `<div class="team-code">${awayCode}</div>` : ''}
                 </div>
             </div>
-            ${venue ? `<div class="match-venue">📍 ${venue}</div>` : ''}
+            ${stadium ? `<div class="match-venue">📍 ${stadium}</div>` : ''}
         </div>
     `;
 }
@@ -141,8 +136,8 @@ function renderLiveMatches(matches) {
     const liveCount = document.getElementById('liveCount');
 
     const liveMatches = matches.filter(m => {
-        const s = (m.status || '').toLowerCase();
-        return s === 'live' || s === 'in progress' || s === 'playing';
+        const info = getStatusInfo(m);
+        return info.isLive;
     });
 
     if (liveMatches.length > 0) {
@@ -152,30 +147,39 @@ function renderLiveMatches(matches) {
     } else {
         liveBadge.classList.add('hidden');
         liveCount.textContent = '0 matches';
-        // Show upcoming matches as fallback
+
+        // Show today's matches or next upcoming
+        const today = new Date();
+        const todayStr = `${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}/${today.getFullYear()}`;
+
         const upcoming = matches.filter(m => {
-            const s = (m.status || '').toLowerCase();
-            return !s || s === 'upcoming' || s === 'scheduled' || s === 'not started';
+            const info = getStatusInfo(m);
+            return info.isUpcoming;
         }).slice(0, 6);
 
-        if (upcoming.length > 0) {
-            container.innerHTML = `
-                <div class="no-matches">
-                    <div class="icon">⚽</div>
-                    <h3>No live matches right now</h3>
-                    <p style="margin-top:8px;color:rgba(255,255,255,0.4)">Next matches:</p>
-                </div>
-                ${upcoming.map(createMatchCard).join('')}
-            `;
-        } else {
-            container.innerHTML = `
-                <div class="no-matches">
-                    <div class="icon">⚽</div>
-                    <h3>No live matches right now</h3>
-                    <p>Check back during match time!</p>
-                </div>
-            `;
+        const finished = matches.filter(m => {
+            const info = getStatusInfo(m);
+            return info.isFinished;
+        }).slice(-3);
+
+        let html = `
+            <div class="no-matches">
+                <div class="icon">⚽</div>
+                <h3>No live matches right now</h3>
+            </div>
+        `;
+
+        if (finished.length > 0) {
+            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:12px 0;font-size:13px">Recent Results</p>`;
+            html += finished.map(createMatchCard).join('');
         }
+
+        if (upcoming.length > 0) {
+            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:16px 0 12px;font-size:13px">Upcoming</p>`;
+            html += upcoming.map(createMatchCard).join('');
+        }
+
+        container.innerHTML = html;
     }
 }
 
@@ -184,14 +188,14 @@ function renderSchedule(matches) {
     const container = document.getElementById('scheduleMatches');
     let filtered = matches;
 
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const tomorrow = new Date(now.getTime() + 86400000).toISOString().split('T')[0];
-
     if (currentFilter === 'today') {
-        filtered = matches.filter(m => (m.date || '').startsWith(today));
+        const now = new Date();
+        const todayMMDD = `${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+        filtered = matches.filter(m => (m.local_date || '').includes(todayMMDD));
     } else if (currentFilter === 'tomorrow') {
-        filtered = matches.filter(m => (m.date || '').startsWith(tomorrow));
+        const tomorrow = new Date(Date.now() + 86400000);
+        const tomorrowMMDD = `${String(tomorrow.getMonth()+1).padStart(2,'0')}/${String(tomorrow.getDate()).padStart(2,'0')}`;
+        filtered = matches.filter(m => (m.local_date || '').includes(tomorrowMMDD));
     }
 
     if (filtered.length === 0) {
@@ -218,7 +222,9 @@ function filterSchedule(filter) {
 // Render standings
 function renderStandings(groups) {
     const container = document.getElementById('standingsContent');
-    if (!groups || Object.keys(groups).length === 0) {
+
+    // Groups is an array of objects with { name: "A", teams: [...] }
+    if (!groups || (Array.isArray(groups) && groups.length === 0)) {
         container.innerHTML = `
             <div class="no-matches" style="grid-column:1/-1">
                 <div class="icon">🏆</div>
@@ -228,12 +234,23 @@ function renderStandings(groups) {
         return;
     }
 
+    const groupList = Array.isArray(groups) ? groups : Object.values(groups);
+
     let html = '';
-    for (const [groupName, teams] of Object.entries(groups)) {
-        const sorted = Array.isArray(teams) ? teams.sort((a, b) => (b.points || 0) - (a.points || 0)) : [];
+    for (const group of groupList) {
+        const groupName = group.name || group.group || '?';
+        const teams = group.teams || [];
+
+        // Sort by points, then goal difference
+        const sorted = [...teams].sort((a, b) => {
+            const ptsDiff = (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0);
+            if (ptsDiff !== 0) return ptsDiff;
+            return (parseInt(b.gd) || 0) - (parseInt(a.gd) || 0);
+        });
+
         html += `
             <div class="group-card">
-                <div class="group-header">🏆 ${formatGroup(groupName)}</div>
+                <div class="group-header">🏆 Group ${groupName}</div>
                 <table class="group-table">
                     <thead>
                         <tr>
@@ -248,18 +265,24 @@ function renderStandings(groups) {
                         </tr>
                     </thead>
                     <tbody>
-                        ${sorted.map((t, i) => `
-                            <tr class="${i < 2 ? 'qualified' : ''}">
-                                <td>${i + 1}</td>
-                                <td>${getFlag(t.code || '', t.name || t.team || '')} ${t.name || t.team || 'Unknown'}</td>
-                                <td>${t.played || t.p || 0}</td>
-                                <td>${t.won || t.w || 0}</td>
-                                <td>${t.drawn || t.d || 0}</td>
-                                <td>${t.lost || t.l || 0}</td>
-                                <td>${t.goal_difference || t.gd || t.diff || 0}</td>
-                                <td><strong>${t.points || t.pts || 0}</strong></td>
-                            </tr>
-                        `).join('')}
+                        ${sorted.map((t, i) => {
+                            // Get team name from team_id lookup
+                            const teamInfo = teamLookup[t.team_id] || {};
+                            const teamName = teamInfo.name || `Team ${t.team_id}`;
+                            const teamCode = teamInfo.code || '';
+                            return `
+                                <tr class="${i < 2 ? 'qualified' : ''}">
+                                    <td>${i + 1}</td>
+                                    <td>${getFlag(teamCode, teamName)} ${teamName}</td>
+                                    <td>${t.mp || 0}</td>
+                                    <td>${t.w || 0}</td>
+                                    <td>${t.d || 0}</td>
+                                    <td>${t.l || 0}</td>
+                                    <td>${t.gd || 0}</td>
+                                    <td><strong>${t.pts || 0}</strong></td>
+                                </tr>
+                            `;
+                        }).join('')}
                     </tbody>
                 </table>
             </div>
@@ -282,8 +305,8 @@ function renderTeams(teams) {
     }
 
     container.innerHTML = teams.map(t => {
-        const name = t.name || t.team || 'Unknown';
-        const code = t.code || t.team_code || '';
+        const name = t.name_en || t.name || 'Unknown';
+        const code = t.fifa_code || '';
         return `
             <div class="team-card">
                 <div class="team-card-flag">${getFlag(code, name)}</div>
@@ -297,8 +320,8 @@ function renderTeams(teams) {
 // Search teams
 function searchTeams(query) {
     const filtered = allTeams.filter(t => {
-        const name = (t.name || t.team || '').toLowerCase();
-        const code = (t.code || t.team_code || '').toLowerCase();
+        const name = (t.name_en || t.name || '').toLowerCase();
+        const code = (t.fifa_code || '').toLowerCase();
         return name.includes(query.toLowerCase()) || code.includes(query.toLowerCase());
     });
     renderTeams(filtered);
@@ -315,18 +338,40 @@ function switchTab(tab) {
 // Fetch data from API
 async function fetchData() {
     try {
-        // Fetch all data in parallel
-        const [gamesRes, groupsRes, teamsRes] = await Promise.allSettled([
+        const [gamesRes, groupsRes, teamsRes, stadiumsRes] = await Promise.allSettled([
             fetch(`${API_BASE}/get/games`),
             fetch(`${API_BASE}/get/groups`),
-            fetch(`${API_BASE}/get/teams`)
+            fetch(`${API_BASE}/get/teams`),
+            fetch(`${API_BASE}/get/stadiums`)
         ]);
+
+        // Process teams first (for lookup)
+        if (teamsRes.status === 'fulfilled') {
+            const teamsData = await teamsRes.value.json();
+            allTeams = Array.isArray(teamsData) ? teamsData : (teamsData.data || []);
+            // Build lookup: team_id -> {name, code}
+            allTeams.forEach(t => {
+                const name = t.name_en || t.name || '';
+                const code = t.fifa_code || '';
+                if (t.id) teamLookup[t.id] = { name, code };
+                if (code) teamLookup[code] = { name, code };
+            });
+            renderTeams(allTeams);
+        }
+
+        // Process stadiums
+        if (stadiumsRes.status === 'fulfilled') {
+            const stadiumsData = await stadiumsRes.value.json();
+            const stadiums = Array.isArray(stadiumsData) ? stadiumsData : (stadiumsData.data || []);
+            stadiums.forEach(s => {
+                if (s.id) allStadiums[s.id] = s.name_en || s.fifa_name || '';
+            });
+        }
 
         // Process matches
         if (gamesRes.status === 'fulfilled') {
             const gamesData = await gamesRes.value.json();
-            allMatches = Array.isArray(gamesData) ? gamesData :
-                         (gamesData.data || gamesData.matches || gamesData.games || []);
+            allMatches = Array.isArray(gamesData) ? gamesData : (gamesData.data || []);
             renderLiveMatches(allMatches);
             renderSchedule(allMatches);
         }
@@ -334,16 +379,8 @@ async function fetchData() {
         // Process groups/standings
         if (groupsRes.status === 'fulfilled') {
             const groupsData = await groupsRes.value.json();
-            allGroups = groupsData.data || groupsData.groups || groupsData;
+            allGroups = groupsData.data || groupsData;
             renderStandings(allGroups);
-        }
-
-        // Process teams
-        if (teamsRes.status === 'fulfilled') {
-            const teamsData = await teamsRes.value.json();
-            allTeams = Array.isArray(teamsData) ? teamsData :
-                       (teamsData.data || teamsData.teams || []);
-            renderTeams(allTeams);
         }
 
         console.log(`✅ Data loaded: ${allMatches.length} matches, ${allTeams.length} teams`);
