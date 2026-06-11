@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Particles -->
     <canvas id="particles"></canvas>
 
-    <!-- Header -->
     <header class="header">
         <div class="logo">
             <div class="logo-icon">⚽</div>
@@ -21,57 +19,45 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="live-badge" id="liveBadge">
+            <div class="live-badge hidden" id="liveBadge">
                 <span class="live-dot"></span>
-                LIVE
+                <span id="liveCount">0 LIVE</span>
             </div>
             <div class="auto-refresh">
-                Auto-refresh: <span id="refreshTimer">30</span>s
+                ⏱ <span id="refreshTimer">30</span>s
             </div>
         </div>
     </header>
 
-    <!-- Nav Tabs -->
     <nav class="nav-tabs">
-        <button class="tab active" data-tab="live" onclick="switchTab('live')">
-            🔴 LIVE NOW
-        </button>
-        <button class="tab" data-tab="schedule" onclick="switchTab('schedule')">
-            📅 SCHEDULE
-        </button>
-        <button class="tab" data-tab="standings" onclick="switchTab('standings')">
-            🏆 STANDINGS
-        </button>
-        <button class="tab" data-tab="teams" onclick="switchTab('teams')">
-            👥 TEAMS
-        </button>
+        <button class="tab active" data-tab="live" onclick="switchTab('live')">🔴 LIVE NOW</button>
+        <button class="tab" data-tab="schedule" onclick="switchTab('schedule')">📅 SCHEDULE</button>
+        <button class="tab" data-tab="standings" onclick="switchTab('standings')">🏆 STANDINGS</button>
+        <button class="tab" data-tab="teams" onclick="switchTab('teams')">👥 TEAMS</button>
+        <button class="tab" data-tab="tv" onclick="switchTab('tv')">📺 TV CHANNELS</button>
     </nav>
 
-    <!-- AdSense Banner (Top) -->
-    <div class="ad-banner" id="adTop">
+    <!-- AdSense -->
+    <div class="ad-banner">
         <div class="ad-placeholder">
             <span class="ad-label">Advertisement</span>
-            <div class="ad-content">Your Ad Here — Google AdSense</div>
+            <div class="ad-content">Google AdSense — Your Ad Here</div>
         </div>
     </div>
 
-    <!-- Content Area -->
     <main class="main-content">
-        <!-- LIVE TAB -->
+        <!-- LIVE -->
         <section id="tab-live" class="tab-content active">
             <div class="section-header">
                 <h2>🔴 Live Matches</h2>
-                <span class="match-count" id="liveCount">0 matches</span>
+                <span class="match-count" id="liveCountLabel"></span>
             </div>
             <div id="liveMatches" class="matches-grid">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading live matches...</p>
-                </div>
+                <div class="loading"><div class="spinner"></div><p>Loading matches...</p></div>
             </div>
         </section>
 
-        <!-- SCHEDULE TAB -->
+        <!-- SCHEDULE -->
         <section id="tab-schedule" class="tab-content">
             <div class="section-header">
                 <h2>📅 Match Schedule</h2>
@@ -84,35 +70,38 @@
             <div id="scheduleMatches" class="matches-grid"></div>
         </section>
 
-        <!-- STANDINGS TAB -->
+        <!-- STANDINGS -->
         <section id="tab-standings" class="tab-content">
-            <div class="section-header">
-                <h2>🏆 Group Standings</h2>
-            </div>
+            <div class="section-header"><h2>🏆 Group Standings</h2></div>
             <div id="standingsContent" class="standings-grid"></div>
         </section>
 
-        <!-- TEAMS TAB -->
+        <!-- TEAMS -->
         <section id="tab-teams" class="tab-content">
             <div class="section-header">
                 <h2>👥 All Teams</h2>
                 <div class="search-box">
-                    <input type="text" id="teamSearch" placeholder="Search team..." oninput="searchTeams(this.value)">
+                    <input type="text" id="teamSearch" placeholder="🔍 Search team..." oninput="searchTeams(this.value)">
                 </div>
             </div>
             <div id="teamsContent" class="teams-grid"></div>
         </section>
+
+        <!-- TV CHANNELS -->
+        <section id="tab-tv" class="tab-content">
+            <div id="tvChannels"></div>
+        </section>
     </main>
 
-    <!-- AdSense Banner (Bottom) -->
+    <!-- AdSense Bottom -->
     <div class="ad-banner">
         <div class="ad-placeholder">
             <span class="ad-label">Advertisement</span>
-            <div class="ad-content">Your Ad Here — Google AdSense</div>
+            <div class="ad-content">Google AdSense — Your Ad Here</div>
         </div>
     </div>
 
-    <!-- Affiliate Section -->
+    <!-- Affiliate -->
     <section class="affiliate-section">
         <h3>🛍️ Football Gear</h3>
         <div class="affiliate-grid">
@@ -139,7 +128,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
@@ -150,10 +138,9 @@
                 <a href="#">About</a>
                 <a href="#">Contact</a>
                 <a href="#">Privacy</a>
-                <a href="#">Terms</a>
             </div>
             <div class="footer-copy">
-                © 2026 Goal Zone — Live Football Scores. Not affiliated with FIFA.
+                © 2026 Goal Zone — Not affiliated with FIFA.
             </div>
         </div>
     </footer>

@@ -15,7 +15,7 @@ let currentFilter = 'all';
 // Country flag emojis (fallback)
 const FLAG_EMOJI = {
     'MEX': '🇲🇽', 'BRA': '🇧🇷', 'ARG': '🇦🇷', 'FRA': '🇫🇷', 'GER': '🇩🇪',
-    'ESP': '🇪🇸', 'ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'ITA': '🇮🇹', 'POR': '🇵🇹', 'NED': '🇳🇱',
+    'ESP': '🇪🇸', 'ITA': '🇮🇹', 'POR': '🇵🇹', 'NED': '🇳🇱',
     'BEL': '🇧🇪', 'CRO': '🇭🇷', 'JPN': '🇯🇵', 'KOR': '🇰🇷', 'AUS': '🇦🇺',
     'USA': '🇺🇸', 'CAN': '🇨🇦', 'MAR': '🇲🇦', 'SEN': '🇸🇳', 'GHA': '🇬🇭',
     'CMR': '🇨🇲', 'SRB': '🇷🇸', 'SUI': '🇨🇭', 'POL': '🇵🇱', 'DEN': '🇩🇰',
@@ -24,45 +24,77 @@ const FLAG_EMOJI = {
     'PAN': '🇵🇦', 'HON': '🇭🇳', 'JAM': '🇯🇲', 'HAI': '🇭🇹', 'QAT': '🇶🇦',
     'IRQ': '🇮🇶', 'RSA': '🇿🇦', 'NGA': '🇳🇬', 'CIV': '🇨🇮', 'MLI': '🇲🇱',
     'BFA': '🇧🇫', 'NZL': '🇳🇿', 'UKR': '🇺🇦', 'SWE': '🇸🇪', 'NOR': '🇳🇴',
-    'NIR': '🇬🇧', 'SCO': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'WAL': '🏴󠁧󠁢󠁷󠁬󠁳󠁿', 'GRE': '🇬🇷', 'HUN': '🇭🇺',
     'CZE': '🇨🇿', 'TUR': '🇹🇷', 'RUS': '🇷🇺', 'ROU': '🇷🇴', 'BUL': '🇧🇬',
     'ALB': '🇦🇱', 'ISL': '🇮🇸', 'FIN': '🇫🇮', 'SVK': '🇸🇰', 'SVN': '🇸🇮',
-    'BIH': '🇧🇦', 'MNE': '🇲🇪', 'MKD': '🇲🇰', 'GEO': '🇬🇪', 'ARM': '🇦🇲',
-    'AZE': '🇦🇿', 'KAZ': '🇰🇿', 'UZB': '🇺🇿', 'CHN': '🇨🇳', 'IND': '🇮🇳',
+    'BIH': '🇧🇦', 'GEO': '🇬🇪', 'ARM': '🇦🇲', 'AZE': '🇦🇿', 'KAZ': '🇰🇿', 'UZB': '🇺🇿',
+    // Full names
+    'Mexico': '🇲🇽', 'Brazil': '🇧🇷', 'Argentina': '🇦🇷', 'France': '🇫🇷',
+    'Germany': '🇩🇪', 'Spain': '🇪🇸', 'Italy': '🇮🇹', 'Portugal': '🇵🇹',
+    'Netherlands': '🇳🇱', 'Belgium': '🇧🇪', 'Croatia': '🇭🇷', 'Japan': '🇯🇵',
+    'South Korea': '🇰🇷', 'Australia': '🇦🇺', 'USA': '🇺🇸', 'Canada': '🇨🇦',
+    'Morocco': '🇲🇦', 'Senegal': '🇸🇳', 'Ghana': '🇬🇭', 'Cameroon': '🇨🇲',
+    'Serbia': '🇷🇸', 'Switzerland': '🇨🇭', 'Poland': '🇵🇱', 'Denmark': '🇩🇰',
+    'Tunisia': '🇹🇳', 'Saudi Arabia': '🇸🇦', 'Iran': '🇮🇷', 'Uruguay': '🇺🇾',
+    'Ecuador': '🇪🇨', 'Colombia': '🇨🇴', 'Peru': '🇵🇪', 'Chile': '🇨🇱',
+    'Paraguay': '🇵🇾', 'Costa Rica': '🇨🇷', 'Panama': '🇵🇦', 'Honduras': '🇭🇳',
+    'Jamaica': '🇯🇲', 'Haiti': '🇭🇹', 'Qatar': '🇶🇦', 'Iraq': '🇮🇶',
+    'South Africa': '🇿🇦', 'Nigeria': '🇳🇬', 'Ivory Coast': '🇨🇮', 'Mali': '🇲🇱',
+    'Burkina Faso': '🇧🇫', 'New Zealand': '🇳🇿', 'Ukraine': '🇺🇦', 'Sweden': '🇸🇪',
+    'Norway': '🇳🇴', 'Czech Republic': '🇨🇿', 'Czechia': '🇨🇿', 'Turkey': '🇹🇷',
+    'Romania': '🇷🇴', 'Bulgaria': '🇧🇬', 'Albania': '🇦🇱', 'Iceland': '🇮🇸',
+    'Finland': '🇫🇮', 'Slovakia': '🇸🇰', 'Slovenia': '🇸🇮', 'Bosnia': '🇧🇦',
+    'Georgia': '🇬🇪', 'Armenia': '🇦🇲', 'Azerbaijan': '🇦🇿', 'Kazakhstan': '🇰🇿',
+    'Uzbekistan': '🇺🇿', 'United States': '🇺🇸', 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+    'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Wales': '🏴󠁧󠁢󠁷󠁬󠁳󠁿',
 };
 
-// Build team lookup from fifa_code
+// TV Channels for World Cup 2026
+const TV_CHANNELS = {
+    bangladesh: [
+        { name: 'Nagorik TV', type: 'TV', lang: 'Bengali', free: true },
+        { name: 'T Sports', type: 'TV', lang: 'Bengali', free: true },
+        { name: 'Bangladesh Television (BTV)', type: 'TV', lang: 'Bengali', free: true },
+        { name: 'Somoy TV', type: 'TV', lang: 'Bengali', free: true },
+    ],
+    global: [
+        { name: 'FIFA+', type: 'Streaming', lang: 'Multiple', free: true, url: 'https://www.fifaplus.com' },
+        { name: 'Fox Sports (USA)', type: 'TV', lang: 'English', free: false },
+        { name: 'Telemundo (USA)', type: 'TV', lang: 'Spanish', free: false },
+        { name: 'BBC (UK)', type: 'TV', lang: 'English', free: true },
+        { name: 'ITV (UK)', type: 'TV', lang: 'English', free: true },
+        { name: 'ARD/ZDF (Germany)', type: 'TV', lang: 'German', free: true },
+        { name: 'TF1 (France)', type: 'TV', lang: 'French', free: true },
+        { name: 'RAI (Italy)', type: 'TV', lang: 'Italian', free: true },
+        { name: 'NHK (Japan)', type: 'TV', lang: 'Japanese', free: true },
+        { name: 'SBS (Australia)', type: 'TV', lang: 'English', free: true },
+    ]
+};
+
+// Build team lookup
 let teamLookup = {};
 
 function getFlag(code, name) {
     if (code && FLAG_EMOJI[code]) return FLAG_EMOJI[code];
     if (name && FLAG_EMOJI[name]) return FLAG_EMOJI[name];
-    // Try lookup
-    if (code && teamLookup[code]) return teamLookup[code];
+    if (code && teamLookup[code]) return '⚽';
     return '⚽';
 }
 
-// Get stadium name from ID
 function getStadium(id) {
     return allStadiums[id] || '';
 }
 
-// Format match time
 function formatTime(dateStr) {
     if (!dateStr) return '';
     try {
-        // Format: "06/11/2026 13:00"
         const [datePart, timePart] = dateStr.split(' ');
         const [month, day, year] = datePart.split('/');
         const d = new Date(`${year}-${month}-${day}T${timePart}:00`);
-        return d.toLocaleString('en-US', {
-            month: 'short', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
+        return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch { return dateStr; }
 }
 
-// Get match status info
+// Get match status — with TIME-BASED live detection
 function getStatusInfo(match) {
     const finished = (match.finished || '').toUpperCase() === 'TRUE';
     const timeElapsed = (match.time_elapsed || '').toLowerCase();
@@ -71,14 +103,34 @@ function getStatusInfo(match) {
         return { isLive: false, isFinished: true, isUpcoming: false, text: 'FT', class: 'status-finished', minute: '' };
     }
 
-    // Check for live match (time_elapsed contains minutes like "45", "90+2", etc.)
+    // API says live
     if (timeElapsed && timeElapsed !== 'notstarted' && timeElapsed !== 'halftime' && timeElapsed !== 'finished') {
         const minute = timeElapsed === 'halftime' ? 'HT' : timeElapsed + "'";
         return { isLive: true, isFinished: false, isUpcoming: false, text: `🔴 ${minute}`, class: 'status-live', minute };
     }
-
     if (timeElapsed === 'halftime') {
         return { isLive: true, isFinished: false, isUpcoming: false, text: '🔴 HT', class: 'status-live', minute: 'HT' };
+    }
+
+    // TIME-BASED detection: if match time passed, override API status
+    if (match.local_date && (timeElapsed === 'notstarted' || !timeElapsed)) {
+        try {
+            const [datePart, timePart] = match.local_date.split(' ');
+            const [month, day, year] = datePart.split('/');
+            const matchTime = new Date(`${year}-${month}-${day}T${timePart}:00`);
+            const now = new Date();
+            const diffMin = (now - matchTime) / 60000;
+
+            if (diffMin >= 0 && diffMin < 130) {
+                // Match should be live (within 2h 10min of kickoff)
+                const approxMin = Math.min(Math.round(diffMin), 90);
+                const suffix = approxMin > 45 && approxMin <= 60 ? ' (2nd half)' : '';
+                return { isLive: true, isFinished: false, isUpcoming: false, text: `🔴 ~${approxMin}'${suffix}`, class: 'status-live', minute: `${approxMin}` };
+            }
+            if (diffMin >= 130) {
+                return { isLive: false, isFinished: true, isUpcoming: false, text: 'FT', class: 'status-finished', minute: '' };
+            }
+        } catch(e) {}
     }
 
     return {
@@ -86,6 +138,12 @@ function getStatusInfo(match) {
         text: formatTime(match.local_date),
         class: 'status-upcoming', minute: ''
     };
+}
+
+// Get watch info for live matches
+function getWatchInfo() {
+    const bd = TV_CHANNELS.bangladesh.slice(0, 2).map(c => c.name).join(', ');
+    return `📺 ${bd} | FIFA+ (Free)`;
 }
 
 // Create match card HTML
@@ -99,7 +157,6 @@ function createMatchCard(match) {
     const group = match.group || '';
     const stadium = getStadium(match.stadium_id);
     const status = getStatusInfo(match);
-
     const isLive = status.isLive;
     const scoreClass = isLive ? 'live-score' : '';
 
@@ -125,6 +182,7 @@ function createMatchCard(match) {
                 </div>
             </div>
             ${stadium ? `<div class="match-venue">📍 ${stadium}</div>` : ''}
+            ${isLive ? `<div class="match-tv">${getWatchInfo()}</div>` : ''}
         </div>
     `;
 }
@@ -135,32 +193,17 @@ function renderLiveMatches(matches) {
     const liveBadge = document.getElementById('liveBadge');
     const liveCount = document.getElementById('liveCount');
 
-    const liveMatches = matches.filter(m => {
-        const info = getStatusInfo(m);
-        return info.isLive;
-    });
+    const liveMatches = matches.filter(m => getStatusInfo(m).isLive);
+    const finishedMatches = matches.filter(m => getStatusInfo(m).isFinished);
+    const upcomingMatches = matches.filter(m => getStatusInfo(m).isUpcoming);
 
     if (liveMatches.length > 0) {
         liveBadge.classList.remove('hidden');
-        liveCount.textContent = `${liveMatches.length} match${liveMatches.length > 1 ? 'es' : ''}`;
+        liveCount.textContent = `${liveMatches.length} LIVE`;
         container.innerHTML = liveMatches.map(createMatchCard).join('');
     } else {
         liveBadge.classList.add('hidden');
-        liveCount.textContent = '0 matches';
-
-        // Show today's matches or next upcoming
-        const today = new Date();
-        const todayStr = `${String(today.getMonth()+1).padStart(2,'0')}/${String(today.getDate()).padStart(2,'0')}/${today.getFullYear()}`;
-
-        const upcoming = matches.filter(m => {
-            const info = getStatusInfo(m);
-            return info.isUpcoming;
-        }).slice(0, 6);
-
-        const finished = matches.filter(m => {
-            const info = getStatusInfo(m);
-            return info.isFinished;
-        }).slice(-3);
+        liveCount.textContent = '0 live';
 
         let html = `
             <div class="no-matches">
@@ -169,14 +212,14 @@ function renderLiveMatches(matches) {
             </div>
         `;
 
-        if (finished.length > 0) {
-            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:12px 0;font-size:13px">Recent Results</p>`;
-            html += finished.map(createMatchCard).join('');
+        if (finishedMatches.length > 0) {
+            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:12px 0;font-size:13px">📋 Recent Results</p>`;
+            html += finishedMatches.slice(-3).map(createMatchCard).join('');
         }
 
-        if (upcoming.length > 0) {
-            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:16px 0 12px;font-size:13px">Upcoming</p>`;
-            html += upcoming.map(createMatchCard).join('');
+        if (upcomingMatches.length > 0) {
+            html += `<p style="color:rgba(255,255,255,0.4);text-align:center;margin:16px 0 12px;font-size:13px">⏰ Coming Up</p>`;
+            html += upcomingMatches.slice(0, 4).map(createMatchCard).join('');
         }
 
         container.innerHTML = html;
@@ -194,24 +237,17 @@ function renderSchedule(matches) {
         filtered = matches.filter(m => (m.local_date || '').includes(todayMMDD));
     } else if (currentFilter === 'tomorrow') {
         const tomorrow = new Date(Date.now() + 86400000);
-        const tomorrowMMDD = `${String(tomorrow.getMonth()+1).padStart(2,'0')}/${String(tomorrow.getDate()).padStart(2,'0')}`;
-        filtered = matches.filter(m => (m.local_date || '').includes(tomorrowMMDD));
+        const tmrwMMDD = `${String(tomorrow.getMonth()+1).padStart(2,'0')}/${String(tomorrow.getDate()).padStart(2,'0')}`;
+        filtered = matches.filter(m => (m.local_date || '').includes(tmrwMMDD));
     }
 
     if (filtered.length === 0) {
-        container.innerHTML = `
-            <div class="no-matches">
-                <div class="icon">📅</div>
-                <h3>No matches found</h3>
-                <p>Try a different filter</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="no-matches"><div class="icon">📅</div><h3>No matches found</h3><p>Try a different filter</p></div>`;
     } else {
         container.innerHTML = filtered.map(createMatchCard).join('');
     }
 }
 
-// Filter schedule
 function filterSchedule(filter) {
     currentFilter = filter;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -222,71 +258,34 @@ function filterSchedule(filter) {
 // Render standings
 function renderStandings(groups) {
     const container = document.getElementById('standingsContent');
+    const groupList = Array.isArray(groups) ? groups : (groups ? Object.values(groups) : []);
 
-    // Groups is an array of objects with { name: "A", teams: [...] }
-    if (!groups || (Array.isArray(groups) && groups.length === 0)) {
-        container.innerHTML = `
-            <div class="no-matches" style="grid-column:1/-1">
-                <div class="icon">🏆</div>
-                <h3>Standings not available yet</h3>
-            </div>
-        `;
+    if (groupList.length === 0) {
+        container.innerHTML = `<div class="no-matches" style="grid-column:1/-1"><div class="icon">🏆</div><h3>Standings not available yet</h3></div>`;
         return;
     }
-
-    const groupList = Array.isArray(groups) ? groups : Object.values(groups);
 
     let html = '';
     for (const group of groupList) {
         const groupName = group.name || group.group || '?';
         const teams = group.teams || [];
-
-        // Sort by points, then goal difference
-        const sorted = [...teams].sort((a, b) => {
-            const ptsDiff = (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0);
-            if (ptsDiff !== 0) return ptsDiff;
-            return (parseInt(b.gd) || 0) - (parseInt(a.gd) || 0);
-        });
+        const sorted = [...teams].sort((a, b) => (parseInt(b.pts) || 0) - (parseInt(a.pts) || 0) || (parseInt(b.gd) || 0) - (parseInt(a.gd) || 0));
 
         html += `
             <div class="group-card">
                 <div class="group-header">🏆 Group ${groupName}</div>
                 <table class="group-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <th>P</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>GD</th>
-                            <th>Pts</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead>
                     <tbody>
                         ${sorted.map((t, i) => {
-                            // Get team name from team_id lookup
                             const teamInfo = teamLookup[t.team_id] || {};
                             const teamName = teamInfo.name || `Team ${t.team_id}`;
                             const teamCode = teamInfo.code || '';
-                            return `
-                                <tr class="${i < 2 ? 'qualified' : ''}">
-                                    <td>${i + 1}</td>
-                                    <td>${getFlag(teamCode, teamName)} ${teamName}</td>
-                                    <td>${t.mp || 0}</td>
-                                    <td>${t.w || 0}</td>
-                                    <td>${t.d || 0}</td>
-                                    <td>${t.l || 0}</td>
-                                    <td>${t.gd || 0}</td>
-                                    <td><strong>${t.pts || 0}</strong></td>
-                                </tr>
-                            `;
+                            return `<tr class="${i < 2 ? 'qualified' : ''}"><td>${i+1}</td><td>${getFlag(teamCode, teamName)} ${teamName}</td><td>${t.mp||0}</td><td>${t.w||0}</td><td>${t.d||0}</td><td>${t.l||0}</td><td>${t.gd||0}</td><td><strong>${t.pts||0}</strong></td></tr>`;
                         }).join('')}
                     </tbody>
                 </table>
-            </div>
-        `;
+            </div>`;
     }
     container.innerHTML = html;
 }
@@ -295,29 +294,16 @@ function renderStandings(groups) {
 function renderTeams(teams) {
     const container = document.getElementById('teamsContent');
     if (!teams || teams.length === 0) {
-        container.innerHTML = `
-            <div class="no-matches" style="grid-column:1/-1">
-                <div class="icon">👥</div>
-                <h3>Teams data loading...</h3>
-            </div>
-        `;
+        container.innerHTML = `<div class="no-matches" style="grid-column:1/-1"><div class="icon">👥</div><h3>Teams data loading...</h3></div>`;
         return;
     }
-
     container.innerHTML = teams.map(t => {
         const name = t.name_en || t.name || 'Unknown';
         const code = t.fifa_code || '';
-        return `
-            <div class="team-card">
-                <div class="team-card-flag">${getFlag(code, name)}</div>
-                <div class="team-card-name">${name}</div>
-                ${code ? `<div class="team-card-code">${code}</div>` : ''}
-            </div>
-        `;
+        return `<div class="team-card"><div class="team-card-flag">${getFlag(code, name)}</div><div class="team-card-name">${name}</div>${code ? `<div class="team-card-code">${code}</div>` : ''}</div>`;
     }).join('');
 }
 
-// Search teams
 function searchTeams(query) {
     const filtered = allTeams.filter(t => {
         const name = (t.name_en || t.name || '').toLowerCase();
@@ -327,7 +313,26 @@ function searchTeams(query) {
     renderTeams(filtered);
 }
 
-// Tab switching
+// Render TV channels
+function renderTVChannels() {
+    const container = document.getElementById('tvChannels');
+    if (!container) return;
+
+    let html = '<h3 style="color:#fff;margin-bottom:16px">📺 Where to Watch</h3>';
+    html += '<h4 style="color:#4CAF50;margin-bottom:8px">🇧🇩 Bangladesh</h4><div class="tv-list">';
+    TV_CHANNELS.bangladesh.forEach(ch => {
+        html += `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`;
+    });
+    html += '</div>';
+
+    html += '<h4 style="color:#FF9800;margin:16px 0 8px">🌍 Global Broadcasters</h4><div class="tv-list">';
+    TV_CHANNELS.global.forEach(ch => {
+        html += `<div class="tv-card"><div class="tv-name">${ch.name}</div><div class="tv-info">${ch.type} • ${ch.lang} • ${ch.free ? '✅ Free' : '💰 Paid'}</div></div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
 function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
@@ -335,7 +340,7 @@ function switchTab(tab) {
     document.getElementById(`tab-${tab}`).classList.add('active');
 }
 
-// Fetch data from API
+// Fetch data
 async function fetchData() {
     try {
         const [gamesRes, groupsRes, teamsRes, stadiumsRes] = await Promise.allSettled([
@@ -345,11 +350,9 @@ async function fetchData() {
             fetch(`${API_BASE}/get/stadiums`)
         ]);
 
-        // Process teams first (for lookup)
         if (teamsRes.status === 'fulfilled') {
             const teamsData = await teamsRes.value.json();
             allTeams = Array.isArray(teamsData) ? teamsData : (teamsData.data || []);
-            // Build lookup: team_id -> {name, code}
             allTeams.forEach(t => {
                 const name = t.name_en || t.name || '';
                 const code = t.fifa_code || '';
@@ -359,16 +362,14 @@ async function fetchData() {
             renderTeams(allTeams);
         }
 
-        // Process stadiums
         if (stadiumsRes.status === 'fulfilled') {
             const stadiumsData = await stadiumsRes.value.json();
-            const stadiums = Array.isArray(stadiumsData) ? stadiumsData : (stadiumsData.data || []);
+            const stadiums = stadiumsData.stadiums || stadiumsData.data || (Array.isArray(stadiumsData) ? stadiumsData : []);
             stadiums.forEach(s => {
                 if (s.id) allStadiums[s.id] = s.name_en || s.fifa_name || '';
             });
         }
 
-        // Process matches
         if (gamesRes.status === 'fulfilled') {
             const gamesData = await gamesRes.value.json();
             allMatches = Array.isArray(gamesData) ? gamesData : (gamesData.data || []);
@@ -376,90 +377,58 @@ async function fetchData() {
             renderSchedule(allMatches);
         }
 
-        // Process groups/standings
         if (groupsRes.status === 'fulfilled') {
             const groupsData = await groupsRes.value.json();
             allGroups = groupsData.data || groupsData;
             renderStandings(allGroups);
         }
 
+        renderTVChannels();
         console.log(`✅ Data loaded: ${allMatches.length} matches, ${allTeams.length} teams`);
 
     } catch (error) {
         console.error('❌ Error fetching data:', error);
         document.getElementById('liveMatches').innerHTML = `
-            <div class="no-matches">
-                <div class="icon">⚠️</div>
-                <h3>Connection Error</h3>
-                <p>Could not load match data. Retrying...</p>
-            </div>
-        `;
+            <div class="no-matches"><div class="icon">⚠️</div><h3>Connection Error</h3><p>Could not load match data. Retrying...</p></div>`;
     }
 }
 
-// Auto-refresh countdown
 function startRefreshTimer() {
     refreshCountdown = 30;
     if (refreshInterval) clearInterval(refreshInterval);
     refreshInterval = setInterval(() => {
         refreshCountdown--;
         document.getElementById('refreshTimer').textContent = refreshCountdown;
-        if (refreshCountdown <= 0) {
-            fetchData();
-            refreshCountdown = 30;
-        }
+        if (refreshCountdown <= 0) { fetchData(); refreshCountdown = 30; }
     }, 1000);
 }
 
-// Particle background
+// Particles
 function initParticles() {
     const canvas = document.getElementById('particles');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const PARTICLE_COUNT = 40;
-
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     function createParticle() {
-        return {
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2 + 0.5,
-            speedX: (Math.random() - 0.5) * 0.3,
-            speedY: (Math.random() - 0.5) * 0.3,
-            opacity: Math.random() * 0.3 + 0.1
-        };
+        return { x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 + 0.5, speedX: (Math.random()-0.5)*0.3, speedY: (Math.random()-0.5)*0.3, opacity: Math.random()*0.3+0.1 };
     }
-
-    function init() {
-        resize();
-        particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
-    }
-
+    function init() { resize(); particles = Array.from({length:40}, createParticle); }
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(76, 175, 80, ${p.opacity})`;
-            ctx.fill();
-            p.x += p.speedX;
-            p.y += p.speedY;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(76, 175, 80, ${p.opacity})`; ctx.fill();
+            p.x += p.speedX; p.y += p.speedY;
             if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
             if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
         });
         requestAnimationFrame(animate);
     }
-
-    init();
-    animate();
+    init(); animate();
     window.addEventListener('resize', resize);
 }
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     fetchData();
